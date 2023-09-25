@@ -37,12 +37,13 @@ export class ServiceNotificationFunction extends BaseFunction<NotificationHandle
 		});
 
 		for (const topic of props.topics) {
-			this.eventSources.push(
-				new lambdaEventSources.SnsEventSource(topic, {
-					filterPolicy: props.definition.filterPolicy,
-					deadLetterQueue: this.dlq,
-				}),
-			);
+			const eventSource = new lambdaEventSources.SnsEventSource(topic, {
+				filterPolicy: props.definition.filterPolicy,
+				deadLetterQueue: this.dlq,
+			});
+
+			this.addEventSource(eventSource);
+			this.eventSources.push(eventSource);
 		}
 	}
 }
