@@ -31,7 +31,6 @@ export const handler = NotificationHandler(
 		memorySize: 256,
 	},
 	async (event) => {
-		event.ValidMessages[0]!.body;
 		console.log(event.ValidMessages.length);
 		return;
 	},
