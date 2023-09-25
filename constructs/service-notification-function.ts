@@ -20,15 +20,14 @@ export class ServiceNotificationFunction extends BaseFunction<NotificationHandle
 		id: string,
 		props: ServiceNotificationFunctionProps,
 	) {
-		const { definition, defaults } = props;
 		super(scope, id, {
 			...props,
 			defaults: {
 				timeout: 60,
-				...defaults,
+				...props.defaults,
 			},
 			environment: {
-				DD_TAGS: `handler_type:notification,handler_name:${definition.name}`,
+				DD_TAGS: `handler_type:notification,handler_name:${props.definition.name}`,
 				...props.environment,
 			},
 		});
@@ -40,7 +39,7 @@ export class ServiceNotificationFunction extends BaseFunction<NotificationHandle
 		for (const topic of props.topics) {
 			this.eventSources.push(
 				new lambdaEventSources.SnsEventSource(topic, {
-					filterPolicy: definition.filterPolicy,
+					filterPolicy: props.definition.filterPolicy,
 					deadLetterQueue: this.dlq,
 				}),
 			);
