@@ -1,6 +1,6 @@
 {
 	"name": "@tailwind/faceteer-cdk",
-	"version": "5.0.1",
+	"version": "5.1.0-alpha.4",
 	"description": "CDK 2.0 constructs and helpers that make composing a Lambda powered service easier.",
 	"main": "index.js",
 	"files": [
@@ -49,7 +49,7 @@
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
 		"codecov": "^3.8.2",
-		"esbuild": "^0.14.2",
+		"esbuild": "^0.19.3",
 		"eslint": "^7.27.0",
 		"eslint-config-google": "^0.14.0",
 		"eslint-config-prettier": "^8.3.0",

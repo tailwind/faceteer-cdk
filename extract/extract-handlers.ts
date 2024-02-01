@@ -45,9 +45,12 @@ function handlerName(handler: AnyHandler) {
 		case HandlerTypes.Cron:
 			return pascalCase(handler.definition.name);
 		case HandlerTypes.Notification:
-			return pascalCase(
-				`${handler.definition.topicName}-${handler.definition.name}`,
-			);
+			return handler.definition.topicName &&
+				handler.definition.topics.length === 0
+				? pascalCase(
+						`${handler.definition.topicName}-${handler.definition.name}`,
+				  )
+				: pascalCase(`Notification ${handler.definition.name}`);
 	}
 }
 

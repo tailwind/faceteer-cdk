@@ -8,27 +8,26 @@ import { BaseFunction, BaseFunctionProps } from './base-function';
 
 export interface ServiceNotificationFunctionProps
 	extends BaseFunctionProps<NotificationHandlerDefinition> {
-	topic: sns.Topic;
+	topics: sns.Topic[];
 }
 
 export class ServiceNotificationFunction extends BaseFunction<NotificationHandlerDefinition> {
 	readonly dlq: sqs.Queue;
-	readonly eventSource: lambdaEventSources.SnsEventSource;
+	readonly eventSources: lambdaEventSources.SnsEventSource[] = [];
 
 	constructor(
 		scope: Construct,
 		id: string,
 		props: ServiceNotificationFunctionProps,
 	) {
-		const { definition, defaults, topic } = props;
 		super(scope, id, {
 			...props,
 			defaults: {
 				timeout: 60,
-				...defaults,
+				...props.defaults,
 			},
 			environment: {
-				DD_TAGS: `handler_type:notification,handler_name:${definition.name}`,
+				DD_TAGS: `handler_type:notification,handler_name:${props.definition.name}`,
 				...props.environment,
 			},
 		});
@@ -37,10 +36,14 @@ export class ServiceNotificationFunction extends BaseFunction<NotificationHandle
 			receiveMessageWaitTime: cdk.Duration.seconds(20),
 		});
 
-		this.eventSource = new lambdaEventSources.SnsEventSource(topic, {
-			filterPolicy: definition.filterPolicy,
-			deadLetterQueue: this.dlq,
-		});
-		this.addEventSource(this.eventSource);
+		for (const topic of props.topics) {
+			const eventSource = new lambdaEventSources.SnsEventSource(topic, {
+				filterPolicy: props.definition.filterPolicy,
+				deadLetterQueue: this.dlq,
+			});
+
+			this.addEventSource(eventSource);
+			this.eventSources.push(eventSource);
+		}
 	}
 }
