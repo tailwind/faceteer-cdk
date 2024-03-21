@@ -1,0 +1,49 @@
+name: Publish @tailwind/faceteer-cdk
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - './package.json'
+      - '.github/workflows/publish.yml'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if version has been updated
+        id: check
+        uses: EndBug/version-check@v2
+        with:
+          diff-search: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-name: ./package.json
+
+      - name: Version update detected
+        if: steps.check.outputs.changed == 'true'
+        run: 'echo "Version change found! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./.nvmrc
+          scope: '@tailwind'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Installing dependencies
+        if: steps.check.outputs.changed == 'true'
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.PACKAGES_READ_TOKEN}}
+
+      - name: Publishing package
+        if: steps.check.outputs.changed == 'true'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
