@@ -18,8 +18,8 @@
 		"index.d.ts"
 	],
 	"scripts": {
-		"test": "jest --runInBand --silent --coverage",
-		"test:ci": "jest --ci --runInBand --silent --coverage && codecov",
+		"test": "jest --runInBand --silent",
+		"test:ci": "jest --ci --runInBand --silent",
 		"build:clean": "tsc -b --clean",
 		"build": "tsc -b --clean && tsc -b",
 		"prepublishOnly": "npm run build"
@@ -48,7 +48,6 @@
 		"@types/qs": "^6.9.7",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
-		"codecov": "^3.8.2",
 		"esbuild": "^0.14.2",
 		"eslint": "^7.27.0",
 		"eslint-config-google": "^0.14.0",
