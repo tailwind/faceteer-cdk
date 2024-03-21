@@ -15,9 +15,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     strategy:
       matrix:
         node-version: [18.x, 20.x]
@@ -35,11 +32,6 @@ jobs:
           scope: '@tailwind'
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{secrets.AWS_QA_ROLE}}
-          aws-region: us-east-1
       - name: Install
         run: npm ci
         env:
