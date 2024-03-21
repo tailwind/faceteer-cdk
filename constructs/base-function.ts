@@ -92,7 +92,7 @@ export class BaseFunction<
 						// https://github.com/aws/aws-cdk/blob/bee883c27eef4840e067806740f4f0f242e7db50/packages/@aws-cdk/aws-lambda/lib/runtime.ts#L82-L92
 						supportsInlineCode: true,
 				  })
-				: undefined,
+				: Runtime.NODEJS_20_X,
 			architecture: architecture
 				? mapArchNameToArchObject[architecture]
 				: undefined,
