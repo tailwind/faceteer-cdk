@@ -7,7 +7,40 @@ on:
       - './package.json'
       - '.github/workflows/publish.yml'
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@tailwind'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+      - name: Install
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+
+      - name: Run Jest Tests
+        run: npm run test:ci
+        env:
+          AWS_DEFAULT_REGION: 'us-east-1'
+
+      - name: Build
+        run: npm run build
   publish:
+    needs:
+      - test
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,6 +62,7 @@ jobs:
         run: 'echo "Version change found! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
 
       - name: Use Node.js
+        if: steps.check.outputs.changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version-file: ./.nvmrc
