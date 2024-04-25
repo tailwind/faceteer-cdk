@@ -86,6 +86,9 @@ export class BaseFunction<
 			vpc: useVpc ? network?.vpc : undefined,
 			vpcSubnets: useVpc ? network?.vpcSubnets : undefined,
 			securityGroups: useVpc ? network?.securityGroups : undefined,
+			runtimeManagementMode: definition.runtimeManagementMode
+				? definition.runtimeManagementMode
+				: defaults?.runtimeManagementMode,
 			runtime: runtime
 				? new Runtime(runtime, RuntimeFamily.NODEJS, {
 						// This is enabled in AWS CDK built-in runtimes:
