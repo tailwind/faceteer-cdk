@@ -88,6 +88,7 @@ export interface LambdaServiceProps {
 		logRetention?: 'destroy' | 'retain';
 		logRetentionDuration?: LogRetentionDays;
 		runtime?: HandlerDefinition['runtime'];
+		runtimeManagementMode?: lambda.RuntimeManagementMode;
 		architecture?: HandlerDefinition['architecture'];
 	};
 	/** VPC, subnet, and security groups for the lambda functions.

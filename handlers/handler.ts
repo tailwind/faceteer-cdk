@@ -1,5 +1,6 @@
 import type { Context } from 'aws-lambda';
 import { LogRetentionDays } from '../util/log-retention';
+import type { RuntimeManagementMode } from 'aws-cdk-lib/aws-lambda';
 
 /**
  * The base lambda handler definition for all
@@ -61,7 +62,13 @@ export interface HandlerDefinition {
 	 *
 	 * Defaults to nodejs14.x if not specified.
 	 */
-	runtime?: 'nodejs14.x' | 'nodejs16.x' | 'nodejs18.x' | 'nodejs20.x' | string & {};
+	runtime?:
+		| 'nodejs14.x'
+		| 'nodejs16.x'
+		| 'nodejs18.x'
+		| 'nodejs20.x'
+		| (string & {});
+	runtimeManagementMode?: RuntimeManagementMode;
 	/**
 	 * The AWS Lambda architecture to use for functions.
 	 *
